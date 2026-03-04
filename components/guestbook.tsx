@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MessageSquare, Send, User, Clock } from 'lucide-react'
+import { db, collection, addDoc, query, orderBy, onSnapshot, Timestamp } from '@/lib/firebase'
 
 interface Message {
   id: string
   name: string
   content: string
-  timestamp: number
+  timestamp: Date
 }
 
 export function Guestbook() {
@@ -17,49 +18,55 @@ export function Guestbook() {
   const [name, setName] = useState('')
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  // 从 localStorage 加载留言
+  // 从 Firebase 加载留言
   useEffect(() => {
-    const savedMessages = localStorage.getItem('yujingai-guestbook')
-    if (savedMessages) {
-      try {
-        setMessages(JSON.parse(savedMessages))
-      } catch (e) {
-        console.error('Failed to parse guestbook messages:', e)
-      }
-    }
+    const q = query(collection(db, 'messages'), orderBy('timestamp', 'desc'))
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const messagesData: Message[] = []
+      snapshot.forEach((doc) => {
+        const data = doc.data()
+        messagesData.push({
+          id: doc.id,
+          name: data.name,
+          content: data.content,
+          timestamp: data.timestamp?.toDate() || new Date(),
+        })
+      })
+      setMessages(messagesData)
+      setLoading(false)
+    })
+
+    return () => unsubscribe()
   }, [])
 
-  // 保存留言到 localStorage
-  const saveMessages = (newMessages: Message[]) => {
-    localStorage.setItem('yujingai-guestbook', JSON.stringify(newMessages))
-    setMessages(newMessages)
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim() || !content.trim()) return
 
     setIsSubmitting(true)
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      content: content.trim(),
-      timestamp: Date.now(),
+    try {
+      await addDoc(collection(db, 'messages'), {
+        name: name.trim(),
+        content: content.trim(),
+        timestamp: Timestamp.now(),
+      })
+
+      // 清空表单
+      setName('')
+      setContent('')
+    } catch (error) {
+      console.error('Error adding message:', error)
+      alert('发布失败，请重试')
+    } finally {
+      setIsSubmitting(false)
     }
-
-    const updatedMessages = [newMessage, ...messages]
-    saveMessages(updatedMessages)
-
-    // 清空表单
-    setName('')
-    setContent('')
-    setIsSubmitting(false)
   }
 
-  const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp)
+  const formatTime = (date: Date) => {
     return date.toLocaleString('zh-CN', {
       month: 'short',
       day: 'numeric',
@@ -81,7 +88,7 @@ export function Guestbook() {
             留下你的想法
           </h2>
           <p className="text-foreground/60 font-mono text-sm max-w-md mx-auto">
-            欢迎分享你对 AI 的看法、建议或任何问题，我会认真阅读每一条留言
+            欢迎分享你对 AI 的看法、建议或任何问题，所有人都能看到你的留言
           </p>
         </div>
 
@@ -124,7 +131,7 @@ export function Guestbook() {
                 className="w-full bg-[#00ff9d]/10 border border-[#00ff9d]/50 text-[#00ff9d] hover:bg-[#00ff9d]/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4 mr-2" />
-                {isSubmitting ? '提交中...' : '发布留言'}
+                {isSubmitting ? '发布中...' : '发布留言'}
               </Button>
             </form>
           </CardContent>
@@ -132,7 +139,16 @@ export function Guestbook() {
 
         {/* 留言列表 */}
         <div className="space-y-4">
-          {messages.length === 0 ? (
+          {loading ? (
+            <Card className="bg-black/40 backdrop-blur-xl border-white/10">
+              <CardContent className="p-8 text-center">
+                <div className="inline-block w-8 h-8 border-2 border-[#00ff9d] border-t-transparent rounded-full animate-spin" />
+                <p className="mt-4 text-foreground/40 font-mono text-sm">
+                  加载留言中...
+                </p>
+              </CardContent>
+            </Card>
+          ) : messages.length === 0 ? (
             <Card className="bg-black/40 backdrop-blur-xl border-white/10">
               <CardContent className="p-8 text-center">
                 <MessageSquare className="w-12 h-12 text-foreground/20 mx-auto mb-4" />
@@ -175,7 +191,7 @@ export function Guestbook() {
 
         {/* 提示信息 */}
         <p className="text-center text-foreground/30 text-xs font-mono mt-8">
-          留言仅保存在你的浏览器本地，其他人无法看到
+          所有人都能看到你的留言
         </p>
       </div>
     </section>
