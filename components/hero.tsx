@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { GL } from "./gl";
 import { Pill } from "./pill";
 import { Button } from "./ui/button";
@@ -18,6 +19,20 @@ export function Hero() {
       {/* 内容 */}
       <div className="relative z-10 pb-16 mt-auto text-center pt-32">
         <Pill className="mb-6">AI 探索者</Pill>
+        
+        {/* 头像 */}
+        <div className="mb-6 flex justify-center">
+          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#00ff9d]/30 shadow-lg shadow-[#00ff9d]/10">
+            <Image
+              src="/zzz.jpg"
+              alt="头像"
+              width={96}
+              height={96}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+        
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-sentient">
           探索 AI 的无限可能
         </h1>
