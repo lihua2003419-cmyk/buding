@@ -20,25 +20,24 @@ export function Hero() {
       <div className="relative z-10 pb-16 mt-auto text-center pt-32">
         <Pill className="mb-6">AI 探索者</Pill>
         
-        {/* 头像 */}
-        <div className="mb-6 flex justify-center">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#00ff9d]/30 shadow-lg shadow-[#00ff9d]/10">
-            <Image
-              src="/zzz.jpg"
-              alt="头像"
-              width={96}
-              height={96}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-sentient">
           探索 AI 的无限可能
         </h1>
-        <p className="font-mono text-sm sm:text-base text-foreground/60 text-balance mt-8 max-w-[440px] mx-auto">
-          关于我：一名AI初学者，在这里分享最新 AI 资讯、推荐优质 AI 播客，与你一起探索人工智能的前沿世界
-        </p>
+        <div className="flex items-center justify-center gap-4 mt-8 max-w-[500px] mx-auto">
+          {/* 头像 */}
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#00ff9d]/30 shadow-lg shadow-[#00ff9d]/10 flex-shrink-0">
+            <Image
+              src="/zzz.jpg"
+              alt="头像"
+              width={48}
+              height={48}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <p className="font-mono text-sm sm:text-base text-foreground/60 text-left">
+            关于我：一名AI初学者，在这里分享最新 AI 资讯、推荐优质 AI 播客，与你一起探索人工智能的前沿世界
+          </p>
+        </div>
 
         <div className="flex flex-wrap justify-center gap-4 mt-8 text-sm text-foreground/60 font-mono">
           <span>小红书：248342962</span>
