@@ -19,11 +19,10 @@ export function Hero() {
       <div className="relative z-10 pb-16 mt-auto text-center pt-32">
         <Pill className="mb-6">AI 探索者</Pill>
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-sentient">
-          瑜镜 <br />
-          <i className="font-light">探索 AI 的无限可能</i>
+          探索 AI 的无限可能
         </h1>
         <p className="font-mono text-sm sm:text-base text-foreground/60 text-balance mt-8 max-w-[440px] mx-auto">
-          分享最新 AI 资讯、推荐优质 AI 播客，与你一起探索人工智能的前沿世界
+          关于我：一名AI初学者，在这里分享最新 AI 资讯、推荐优质 AI 播客，与你一起探索人工智能的前沿世界
         </p>
 
         <div className="flex flex-wrap justify-center gap-4 mt-8 text-sm text-foreground/60 font-mono">
