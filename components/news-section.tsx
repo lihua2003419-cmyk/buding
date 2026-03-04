@@ -119,7 +119,7 @@ export function NewsSection() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {news.map((item) => (
-            <Card key={item.id} className="p-6 bg-white/5 border-white/10 hover:bg-white/10 transition-colors">
+            <Card key={item.id} className="p-6 bg-white/5 border-white/10 hover:bg-white/10 transition-colors flex flex-col h-full">
               <div className="flex items-start justify-between gap-4">
                 <h3 className="text-lg font-medium leading-snug flex-1">{item.title}</h3>
               </div>
@@ -128,7 +128,7 @@ export function NewsSection() {
                 <span>{item.publishTime}</span>
               </div>
               
-              <div className="mt-4">
+              <div className="mt-auto pt-4">
                 <Link href={item.link} target="_blank">
                   <Button size="sm">
                     阅读全文
