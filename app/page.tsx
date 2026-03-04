@@ -3,6 +3,7 @@
 import { Hero } from "@/components/hero";
 import { NewsSection } from "@/components/news-section";
 import { PodcastSection } from "@/components/podcast-section";
+import { Guestbook } from "@/components/guestbook";
 import { Leva } from "leva";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <Hero />
       <NewsSection />
       <PodcastSection />
+      <Guestbook />
       <footer className="py-12 border-t border-white/10">
         <div className="container text-center">
           <p className="text-foreground/40 font-mono text-sm">
